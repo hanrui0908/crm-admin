@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>老师用户列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../bootstraptable/bootstrap-table.js"></script>
+    <script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置>用户管理>老师用户列表</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row search_Div">
+            <form class="form-inline">
+                <div class="form-group col-xs-1">
+                    <label>姓名：</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
+                <div class="form-group col-xs-1">
+                    <label>状态：</label>
+                    <select id="type" class="form-control">
+                        <option value="0">全部</option>
+                        <option value="1">启用</option>
+                        <option value="2">停用</option>
+                    </select>
+                </div>
+                <div class="form-group col-xs-1">
+                    <label>批复数量：</label>
+                    <input id="b_count" type="text" class="form-control" />
+                </div>
+                <div class="form-group col-xs-1">
+                    <label>至：</label>
+                    <input id="e_count" type="text" class="form-control">
+                </div>
+                <div class="form-group col-xs-2">
+                    <label>电话：</label>
+                    <input type="text" id="tel" class="form-control">
+                </div>
+                <div class="form-group col-xs-1 col-md-offset-1" style="padding: 10px 0;">
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="search_teacher()">查询</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+        <table class="table" id="table">
+        </table>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $('.datetime').datetimepicker({
+        language:  'zh-CN',
+        format: 'yyyy-mm-dd',
+        minView: "month", //选择日期后，不会再跳转去选择时分秒
+        autoclose:true //选择日期后自动关闭
+    });
+    function search_teacher() {
+        $('#table').bootstrapTable({
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc ",
+            pageSize: 10,
+            pageList: [10, 20, 50],
+            url: 'http://192.168.0.170:15000/yc-crm/teacher/search',
+            queryParams: setParams,
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id ",
+            columns: [
+                {
+                    width: 20,
+                    field: 'name',
+                    title: '姓名',
+                    align: 'center'
+                },
+                {
+                    width: 20,
+                    field: 'tel',
+                    title: '联系电话',
+                    align: 'center'
+                },
+                {
+                    width: 20,
+                    field: 'nickname',
+                    title: '批复数量',
+                    align: 'center',
+                },
+                {
+                    width: 20,
+                    field: 'type',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function (value) {
+                        return value == 0 ? '启用' : '停用';
+                    }
+                },
+                {
+                    width: 50,
+                    field: '',
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                       var info= "<a class='btn btn-info btn-xs' href='teacher_info.html?id="+row.id+"' role='button'>详情</a>>";
+                       var modify="  <a class='btn btn-primary btn-xs' href='teacher_edit.html?id="+row.id+"' role='button'>编辑</a>"
+                       return info + modify;
+                    }
+
+                }
+            ],
+            pagination: true
+        });
+        $('#table').bootstrapTable('refresh');
+    }
+    function setParams(arg) {
+
+        var param = '{';
+        var name = $('#name').val();
+        if (name != null && name != undefined && name != '') {
+            param += '"name":"' + name + '",';
+        }
+        var tel = $('#tel').val();
+        if (tel != null && tel != undefined && tel != '') {
+            param += '"tel":"' + tel + '",';
+        }
+        var type = $('#type').val();
+        if (type != null && type != undefined && type != '') {
+            param += '"type":"' + type + '",';
+        }
+
+        var b_count = $('#b_count').val();
+        if (b_count != null && b_count != undefined && b_count != '') {
+            param += '"b_count":"' + b_count + '",';
+        }
+        var e_count = $('#e_count').val();
+        if (e_count != null && e_count != undefined && e_count != '') {
+            param += '"e_count":"' + e_count + '",';
+        }
+        param += '"plat":"0"';
+        param += '}';
+        arg.param = param;
+        return arg;
+    }
+    function jump_to_per_teacher(id,arg){
+        if (id != undefined || id != '' || id != null) {
+            if (arg == 0) {
+                window.location.href = "teacher_info.html?id="+id;
+            }
+            if (arg == 1) {
+                window.location.href = "teacher_edit.html?id="+id;
+            }
+        }
+    }
+</script>

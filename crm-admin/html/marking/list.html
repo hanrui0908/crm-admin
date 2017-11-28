@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+		<!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+		<script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script src="../../bootstraptable/bootstrap-table.js"></script>
+    	<script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">当前位置>模拟考试管理>阅卷管理</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="row search_Div">
+		  		<form class="form-inline">
+				  <div class="form-group col-xs-3">
+				    <label>用户名：</label>
+				    <input type="text" id="username" class="form-control">
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>科目：</label>
+				    <select id="subject" class="form-control">
+					  <option value="">全部</option>
+					</select>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>试卷名称：</label>
+				    <input type="text" id="model_name" class="form-control">
+				  </div>
+				  
+				  <div class="form-group col-xs-3">
+				    <label>批复状态：</label>
+				    <select id="reply_state" class="form-control">
+					  <option value="-1">全部</option>
+					  <option value="0">已批复</option>
+					  <option value="1">未批复</option>
+					</select>
+				  </div>
+				  <div class="form-group col-xs-3">
+					<label>批复人：</label>
+					<input id="reply_name" type="text" class="form-control" />
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>批复时间：</label>
+				    <div class="input-group">
+					    <input id="reply_btime" type="text" class="form-control datetime">
+					    <span class="input-group-addon">至</span>
+						<input id="reply_etime" type="text" class="form-control datetime">																    
+				  	</div>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>考试时间：</label>
+				    <div class="input-group">
+					    <input id="exam_btime" type="text" class="form-control datetime">
+					    <span class="input-group-addon">至</span>
+						<input id="exam_etime" type="text" class="form-control datetime">																    
+				  	</div>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>考试日期：</label>
+				    <div class="input-group">
+					    <input id="exam_bdate" type="text" class="form-control datetime">
+					    <span class="input-group-addon">至</span>
+						<input id="exam_edate" type="text" class="form-control datetime">																    
+				  	</div>
+				  </div>
+				  
+				  <div class="form-group col-xs-3 col-md-offset-9" style="padding: 10px 0;">
+				  	<button type="button" class="btn btn-primary" id="submitBtn">查询</button>
+				  	<button type="button" onclick="location='marking.html'">批阅页面</button>
+				  	<button type="button" onclick="location='infoMarking.html'">详情页面</button>
+				  	
+				  </div>
+				</form>
+		  	</div>
+		    <table class="table" id="table">
+		    </table>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	function dataList() {
+        $('#table').bootstrapTable({
+            //请求方法
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc",
+            //pageNumber:1,
+            pageSize: 5,
+            pageList: [5, 25, 50],
+			url: "url",
+            queryParams: function(params) {
+                var paramObj = {
+				    name : $("#name").val(),//教材名称
+				    subject : $("#subject").val(),//科目
+				    plat : '0'
+			    };
+                params.param = JSON.stringify(paramObj);
+                return params;
+            },
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id",
+            columns: [{
+            	title:'序号',
+            	formatter: function(value,row,index){
+            		//return index+1;
+            		var page = $('#table').bootstrapTable("getPage");
+                	return page.pageSize * (page.pageNumber - 1) + index + 1;
+            	}
+            },{
+                field: '',
+                title: '用户名',
+                align: 'center'
+            },{
+                field: '',
+                title: '用户昵称',
+                align: 'center'
+            },{
+                field: '',
+                title: '科目',
+                align: 'center'
+            },{
+                field: '',
+                title: '试卷名称',
+                align: 'center'
+            },{
+                field: '',
+                title: '考试日期',
+                align: 'center'
+            },{
+                field: '',
+                title: '考试时间',
+                align: 'center'
+            },{
+                field: '',
+                title: '批复状态',
+                align: 'center'
+            },{
+                field: '',
+                title: '批复分数',
+                align: 'center'
+            },{
+                field: '',
+                title: '批复人',
+                align: 'center'
+            },{
+                field: 'id',
+                title: '操作',
+                align: 'center',
+                formatter: function(value, row, index) {
+					var html = "<div class='btn-group' role='group' aria-label='...'>"+
+						"  <a class='btn btn-info btn-xs' href='infoItem.html?id="+row.id+"' role='button'>详情</a>"+
+						"  <a class='btn btn-primary btn-xs' href='marking.html?id="+row.id+"' role='button'>批复</a>"+
+					"</div>";
+					return html;
+                }
+            }],
+            pagination: true
+        });
+    }
+
+	$(function(){
+		//科目
+//      $("#subject").html("<option value='0'>全部</option>"+get_sub());
+        //年份
+//		$("#year").html("<option value='-1'>全部</option>"+get_year());
+        $('.datetime').datetimepicker({
+	        language:  'zh-CN',
+	        format: 'yyyy-mm-dd',
+	        minView: "month", //选择日期后，不会再跳转去选择时分秒
+	        autoclose:true //选择日期后自动关闭
+	    });
+	    dataList();
+	    $("#submitBtn").click(function(){//查询
+	    	$('#table').bootstrapTable('refresh'); //刷新
+	    });
+	    
+    })
+	
+</script>

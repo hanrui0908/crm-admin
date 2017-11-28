@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>小马达后管理系统登录页面</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+    <script srcj="js/jquery.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+    <!--[if lt IE 9]>
+
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="login-img3-body">
+<div class="container">
+    <div class="login-form">
+        <div class="login-wrap">
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+                <select id="user_role"type="text" class="form-control" placeholder="用户角色" autofocus>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+                <input id="user_name" type="text" class="form-control" placeholder="用户名称" autofocus>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                <input id="user_password" type="password" class="form-control" placeholder="用户密码">
+            </div>
+            <button id="op_login" onClick="op_login()" class="btn btn-primary btn-lg btn-block" type="">登录</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+   $(function () {
+       $.ajax({
+           url:"http://193.168.0.170:15000/yc-crm/role/search/{}",
+           type: "post",
+           dataType: "json",
+           success: function (msg) {
+                var data =msg.result.result;
+                var html="";
+                for(var i =0;i<data.length;i++){
+                     html+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+                }
+                $("#user_role").append(html);
+           }
+       })
+   })
+
+   function op_login(){
+       var param="{";
+       var user_role=$("#user_role").val();
+       if(user_role!=undefined||user_role!=""||user_role!="null"){
+           param+="role:'"+user_role+"',";
+       }
+       var name=$("#user_name").val();
+       if(user_role!=undefined||user_role!=""||user_role!="null"){
+           param+="name:'"+name+"',";
+       }
+       var password=$("#user_password").val();
+       if(password!=undefined||password!=""||password!="null"){
+           param+="password:'"+password+"'";
+       }
+       param+="}";
+       $.ajax({
+           url:"http://193.168.0.170:15000/yc-crm/op/login/"+param,
+           type: "post",
+           dataType: "json",
+           success: function (msg) {
+             if(msg.status==0){
+                 sessionStorage.setItem("op",JSON.stringify(msg.result.result));
+                 window.location.href="../../index.html";
+             }
+             if(msg.status!=0){
+             }
+           }
+       })
+   }
+</script>

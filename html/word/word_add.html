@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link  href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="../../js/jquery.form.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置：题库管理>添加单词</h3>
+    </div>
+    <div class="panel-body">
+        <!--内容区域-->
+        <div class="row">
+            <div class="col-xs-4 col-lg-offset-3">
+                <form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">单词</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="w_add_word" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">英式音标</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="w_add_phonetic_symbol_e" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">英式音标文件</label>
+                        <div class="col-xs-9">
+                            <input type="file" id="w_add_reaf_e" name="w_add_reaf_e">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">美式音标</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="w_add_phonetic_symbol_a" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">美式音标文件</label>
+                        <div class="col-xs-9">
+                            <input type="file" id="w_add_reaf_a"  name="w_add_reaf_a">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">汉语解释</label>
+                        <div class="col-xs-9">
+                            <textarea id="w_add_ep_c" class="form-control" name="" rows="" cols=""></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">英语解释</label>
+                        <div class="col-xs-9">
+                            <textarea id="w_add_ep_e" class="form-control" name="" rows="" cols=""></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">例句</label>
+                        <div class="col-xs-9">
+                            <textarea id="w_add_example" class="form-control" name="" rows="" cols=""></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="button" class="btn btn-primary" id="addItem">保存</button>
+                            <button type="button" class="btn btn-default" id="revert">返回</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+        $("#addItem").click(function(){
+            word_add();
+        });
+        function word_add() {
+
+            var param = {};
+            var w_add_word = $("#w_add_word").val();
+            if (w_add_word != null && w_add_word != undefined && w_add_word != '') {
+                param.word = w_add_word;
+            }
+            var w_add_phonetic_symbol_e = $("#w_add_phonetic_symbol_e").val();
+            if (w_add_phonetic_symbol_e != null && w_add_phonetic_symbol_e != undefined && w_add_phonetic_symbol_e != '') {
+                param.phonetic_symbol_e = w_add_phonetic_symbol_e;
+            }
+            var w_add_phonetic_symbol_a = $("#w_add_phonetic_symbol_a").val();
+            if (w_add_phonetic_symbol_a != null && w_add_phonetic_symbol_a != undefined && w_add_phonetic_symbol_a != '') {
+                param.phonetic_symbol_a = w_add_phonetic_symbol_a;
+            }
+            var w_add_ep_c = $("#w_add_ep_c").val();
+            if (w_add_ep_c != null && w_add_ep_c != undefined && w_add_ep_c != '') {
+                param.explain_c = w_add_ep_c;
+            }
+            var w_add_ep_e = $("#w_add_ep_e").val();
+            if (w_add_ep_e != null && w_add_ep_e != undefined && w_add_ep_e != '') {
+                param.explain_e = w_add_ep_e;
+            }
+            var w_add_year = $("#w_add_year").val();
+            {
+            }
+            if (w_add_year != null && w_add_year != undefined && w_add_year != '') {
+                param.year = w_add_year;
+            }
+            var w_add_example = $("#w_add_example").val();
+            if (w_add_example != null && w_add_example != undefined && w_add_example != '') {
+                param.example = w_add_example;
+            }
+            param.creator = "system";
+            var from = new FormData(document.getElementById("form"));
+            from.append("param", JSON.stringify(param));
+            $.ajax({
+                url: 'http://192.168.0.170:15000/yc-crm/word/add',
+                type: 'post',
+                dataType: "json",
+                data: from,
+                contentType: false,
+                processData: false,
+                success: function (msg) {
+                  alert("添加成功");
+                }, error: function (msg) {
+                    alert("添加失败");
+                }
+            })
+        }
+      $("#revert").click(function(){
+	     window.location.href="word.html";
+	  })
+</script>

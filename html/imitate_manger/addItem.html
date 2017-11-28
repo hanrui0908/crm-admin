@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<link  href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+		<style>
+			body *{
+				/*border:1px solid red;*/
+			}
+			.subject_row{
+				margin: 10px 0;
+				overflow: hidden;
+			}
+			.del_row_btn{
+				margin-top: 28px;
+			}
+			.datetimepicker-hours .table-condensed thead{
+				height: 0;
+				visibility: hidden;
+			}
+			.datetimepicker-minutes .table-condensed thead{
+				height: 0;
+				visibility: hidden;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">当前位置：模拟考试管理>模拟考试发布管理>新建模拟考试</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<!--内容区域-->
+		  	<div class="row search_Div">
+		  		<div class="col-xs-12">
+	  				<form class="form-inline" id="" enctype="multipart/form-data" method="post">
+						<div class="form-group col-xs-3">
+						    <label>考试日期：</label>
+					    	<div class="input-group">
+							    <input id="btime" type="text" class="form-control dateTime btime">
+							    <span class="input-group-addon">至</span>
+								<input id="etime" type="text" class="form-control dateTime etime">																    
+							</div>
+						</div>
+					  	<div class="form-group col-xs-3">
+						    <label>考试时限：</label>
+						    <input type="text" class="form-control" id="" placeholder="">
+						</div>
+						<div class="form-group col-xs-3">
+							<label>收费状态</label>
+							<select id="" class="form-control">
+								<option>收费</option>
+								<option>免费</option>
+							</select>
+						</div>
+						<div class="form-group col-xs-3">
+							<label>收费金额</label>
+							<input type="text" class="form-control" id="">
+						</div>
+					  
+					  <div class="form-group col-xs-8 col-md-offset-2">
+					    <label>模考描述</label>
+				    	<textarea id="" class="form-control" name="" rows="" cols=""></textarea>
+					  </div>
+					  <div class="form-group col-xs-8 col-md-offset-2">
+					    <label>考试规则</label>
+					    <textarea id="" class="form-control" name="" rows="" cols=""></textarea>
+					  </div>
+					  
+					</form>
+		  		</div>
+		  		
+		  		<div class="col-xs-12">
+		  			<form class="form-inline" id="sub_row_info" enctype="multipart/form-data" method="post">
+		  				<div class="subject_row">
+			  				<div class="form-group col-xs-3">
+							    <label>1考场：</label><input type="text" id="" class="form-control index">
+							</div>
+							<div class="form-group col-xs-3">
+							    <label>考试时间：</label>
+							    <div class="input-group">
+								    <input id="btime" type="text" class="form-control time">
+								    <span class="input-group-addon">至</span>
+									<input id="etime" type="text" class="form-control time">																    
+								</div>
+							</div>
+							<div class="form-group col-xs-3">
+							    <label>限制人数：</label><input type="text" id="" class="form-control score">
+							</div>
+						</div>
+						
+		  			</form>
+		  		</div>
+		  		<div class="col-xs-10 text-center">
+		  			<button type="button" class="btn btn-primary" id="addItem">保存</button>
+					<button type="button" class="btn btn-default" id="revert" onclick="location='list.html'">返回</button>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	
+	var json;
+	$(function(){
+		//科目
+        $("#subject").html("<option value='0'>请选择</option>"+get_sub());
+        //考试日期开始
+        $('.btime').datetimepicker({
+            language:  'zh-CN',
+            format:'yyyy-mm-dd hh:ii:00',
+//          minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true //选择日期后自动关闭
+        });
+        //考试日期截止
+        $('.etime').datetimepicker({
+            language:  'zh-CN',
+            format:'hh:ii:00',
+//          minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true, //选择日期后自动关闭
+	        weekStart: 1,
+	        todayBtn:  1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 1,
+			minView: 0,
+			maxView: 1,
+			forceParse: 0
+        });
+        
+        $('.time').datetimepicker({
+            language:  'zh-CN',
+            format:'hh:ii:00',
+//          minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true, //选择日期后自动关闭
+	        weekStart: 1,
+	        todayBtn:  1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 1,
+			minView: 0,
+			maxView: 1,
+			forceParse: 0
+        });
+        
+		$("#addItem").click(function(){
+			var obj_All = {}; 
+			var name = $("#name").val();//模板名称
+			if(name == ""){
+				alerts("请输入名称")
+				return;
+			}
+			var subject = $("#subject").val();//科目
+			if(subject == "0"){
+				alerts("请选择科目")
+				return;
+			}
+			var paper_score = $("#paper_score").val(); //试卷分数
+			if(paper_score == ""){
+				alerts("请输入试卷分数")
+				return;
+			}
+			var sumary = $("#sumary").val();//描述
+			if(sumary == ""){
+				alerts("请输入描述")
+				return;
+			}
+			//题目信息
+			var arr = [];
+			for(var i = 0;i<$(".subject_row").length;i++){
+				var obj = {
+					index:$(".subject_row").eq(i).find(".index").val(),
+					item_type:$(".subject_row").eq(i).find(".item_type").val(),
+					score:$(".subject_row").eq(i).find(".score").val()
+				}
+				arr.push(obj);
+			}
+			obj_All = {
+				name:name,
+				subject:subject,
+				paper_score:paper_score,
+				sumary:sumary,
+				model_element:arr
+			}
+			
+			console.log(obj_All);
+			$.ajax({
+				type: "post",  
+				url: "http://192.168.0.170:15000/yc-crm/imitate/model/add",
+				cache:false,
+				data:{
+					param:JSON.stringify(obj_All)
+				},
+				dataType: "json",
+				success: function(msg){
+					if(msg.status == 0){
+						alerts("添加成功");
+					}else{
+						alerts("添加失败");
+					}
+				}
+			});
+		});
+		var opt_html = "";
+		$("#subject").change(function(){
+			var index = $(this).val();
+			
+			if(index==3){//英语
+				json = '[{"id":"1","text":"单选题","selected":true},{"id":"6","text":"完型"},{"id":"7","text":"阅读题"},{"id":"8","text":"7选5"},{"id":"9","text":"翻译题"},{"id":"10","text":"排序题"},{"id":"11","text":"小作文"},{"id":"12","text":"大作文"}]';
+			}else if(index==1){//高数
+				json = '[{"id":"1","text":"单选题","selected":true},{"id":"2","text":"填空题"},{"id":"3","text":"解答题"},{"id":"13","text":"证明题"}]';
+			}else if(index==2){//政治
+				json = '[{"id":"1","text":"单选题","selected":true},{"id":"4","text":"多选题"},{"id":"5","text":"材料题"}]';
+			}
+			json = JSON.parse(json)
+			opt_html = "";
+			for(var i = 0;i<json.length;i++){
+				opt_html += "<option value="+json[i].id+">"+json[i].text+"</option>";
+			}
+			for(var i = 0;i<$(".item_type").length;i++){
+				$(".item_type").eq(i).html(opt_html);
+			}
+		});
+		//添加题目信息
+		$(".addsub_row").click(function(){
+			let html = "<div class=\"subject_row\">"+
+				"<div class=\"form-group col-xs-3\">"+
+				"<label>题号：</label>"+
+				"<input type=\"text\" id=\"\" class=\"form-control index\">"+
+				"</div>"+
+				"<div class=\"form-group col-xs-3\">"+
+				"<label>题型：</label>"+
+				"<select id=\"\" class=\"form-control item_type\">"+
+				opt_html+
+				"</select>"+
+				"</div>"+
+				"<div class=\"form-group col-xs-3\">"+
+				"<label>分数：</label>"+
+				"<input type=\"text\" id=\"\" class=\"form-control score\">"+
+				"</div>"+
+				"<div class=\"form-group col-xs-2\">"+
+				"<button type=\"button\" class=\"btn btn-danger del_row_btn btn-sm\">删除</button>"+
+				"</div>"
+				"</div>";
+			$("#sub_row_info").append(html);
+			
+		});
+//		$(".del_row_btn").click(function(){
+		$("body").on("click",".del_row_btn",function(){
+			
+			console.log(1)
+			$(this).parents(".subject_row").remove();
+		});
+	});
+</script>

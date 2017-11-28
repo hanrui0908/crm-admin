@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>老师用户编辑</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置：用户管理>老师用户列表>老师用户编辑</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4 col-lg-offset-3">
+                <form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">老师姓名</label>
+                        <div class="col-xs-9">
+                            <input type="text"  class="form-control" id="name"></input>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">联系方式</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="tel" class="form-control">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">所在学校</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="college" class="form-control">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">所在专业</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="major" class="form-control">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">老师简介</label>
+                        <div class="col-xs-9">
+                            <textarea id="summary" class="form-control">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">状态</label>
+                        <div class="col-xs-9">
+
+                            <select id="type" class="form-control">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" for="">获得佣金</label>
+                        <div class="col-xs-9">
+                            <input type="text" disabled id="count" class="form-control">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="button" class="btn btn-default" id="subBtn">更新</button>
+                            <button type="button" class="btn btn-default" id="revert">返回</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+    $(function () {
+        var id = GetQueryString("id");
+        $.ajax({
+            url: 'http://192.168.0.170:15000/yc-crm/teacher/search',
+            type: "post",
+            cache: false,
+            dataType: "json",
+            data: {
+                param: "{id:" + id + "}",
+                offset: 0,
+                limit: 1
+            },
+            success: function (msg) {
+                console.log(msg);
+                var data = msg.result.result[0];
+                $("#name").val(data.name);
+                $("#tel").val(data.tel);
+                $("#college").val(data.college);
+                $("#major").val(data.major);
+                $("#summary").val(data.summary);
+                if(data.type==0){
+                    $("#type").append("<option selected value='"+0+"' >"+"启用"+"</option>>");
+                    $("#type").append("<option  value='"+1+"' >"+"停用"+"</option>>");
+                }
+                if(data.type==1){
+                    $("#type").append("<option selected value='"+1+"' >"+"停用"+"</option>>");
+                    $("#type").append("<option  value='"+0+"' >"+"启用"+"</option>>");
+                }
+                $("#count").val("￥"+data.count*100+" 元");
+            }
+        })
+
+        $("#revert").click(function () {
+            window.location.href = "teacher.html";
+        });
+    });
+    $("#subBtn").click(function () {
+        var id = GetQueryString("id");
+        var param={};
+        param.name= $("#name").val();
+        param.tel= $("#tel").val();
+        param.college= $("#college").val();
+        param.major= $("#major").val();
+        param.summary= $("#summary").val();
+        param.type= $("#type").val();
+
+        $.ajax({
+            url: 'http://192.168.0.170:15000/yc-crm/teacher/update',
+            type: "post",
+            cache: false,
+            dataType: "json",
+            data: {
+                param: JSON.stringify(param)
+            },
+            success: function (msg) {
+                if (msg.status == 0) {
+                    alert("更新成功")
+                }
+                else {
+                    alert("更新失败")
+                }
+            }
+        })
+    })
+</script>

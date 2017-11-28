@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>题库元素详情</title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+	</head>
+	<body>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">当前位置>题库管理>题库元素来源详情</h3>
+			</div>
+		  <div class="panel-body">
+		  	<div class="row">
+		  		<div class="col-xs-4 col-lg-offset-3">
+		  			<form class="form-horizontal item">
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">名称</label>
+					    <div class="col-xs-9">
+					    	<p class="form-control-static" id="from_name"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">创建时间</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="from_time"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">创建人</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="from_creator"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">备注</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="from_note"></p>
+					     </div>
+					  </div>
+					  <div class="form-group">
+					    <div class="col-sm-offset-3 col-sm-9">
+					      <button type="button" class="btn btn-default" id="revert">返回</button>
+					    </div>
+					  </div>
+					</form>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	var dataInfo = function(id){
+        $.ajax({
+            url: "http://192.168.0.137:8080/yc-crm/item/from/search",
+            type: "post",
+            cache: false,
+            dataType: "json",
+            data: {
+                param: "{id:'"+id+"'}"
+            },
+            success: function (msg) {
+                if (msg.status == 0) {
+                    $("#from_name").html(msg.result.result[0].name);
+                    $("#from_time").html(msg.result.result[0].create_time);
+                    $("#from_creator").html(msg.result.result[0].creater);
+                    $("#from_note").html(msg.result.result[0].note);
+                }
+            }
+        });
+    }
+	$(function(){
+		var id = GetQueryString("id");
+		dataInfo(id);
+		$("#revert").click(function(){
+            window.location.href="item_element.html";
+        });
+	});
+</script>

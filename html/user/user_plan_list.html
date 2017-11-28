@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="bootstraptable/bootstrap-table.css">
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../bootstraptable/bootstrap-table.js"></script>
+    <script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置>用户管理>学生用户计划列表></h3>
+    </div>
+    <div class="panel-body">
+    <div class="row search_Div">
+        <form class="form-inline">
+            <div class="form-group col-xs-2">
+                <label>用户姓名：</label>
+                <input type="text" id="name" class="form-control">
+            </div>
+            <div class="form-group col-xs-2">
+                <label>科目：</label>
+                <select type="text" id="subject" class="form-control"></select>
+            </div>
+            <div class="form-group col-xs-2">
+                <label>轮次：</label>
+                <input type="text" id="number" class="form-control">
+            </div>
+            <div class="form-group col-xs-2">
+                <label>计划开始时间：</label>
+                <input id="plan_start_begin" type="text" class="form-control datetime">
+            </div>
+            <div class="form-group col-xs-2">
+                <label>至：</label>
+                <input id="plan_start_end" type="text" class="form-control datetime">
+            </div>
+            <div class="form-group col-xs-3">
+                <label>计划结束时间：</label>
+                <input id="plan_end_begin" type="text" class="form-control datetime">
+            </div>
+            <div class="form-group col-xs-3">
+                <label>至：</label>
+                <input id="plan_end_end" type="text" class="form-control datetime">
+            </div>
+            <div class="form-group col-xs-2">
+                <label>实际结束时间：</label>
+                <input id="real_start" type="text" class="form-control datetime">
+            </div>
+            <div class="form-group col-xs-2">
+                <label>至：</label>
+                <input id="real_end" type="text" class="form-control datetime">
+                <div class="form-group col-xs-2 col-md-offset-8" style="padding: 10px 0;">
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="search_user_plan()">查询</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <br><br>
+    <table class="table" id="table">
+    </table>
+</div>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        $("#subject").html("<option value=''>请选择</option>"+get_sub());
+    })
+    $('.datetime').datetimepicker({
+        language:  'zh-CN',
+        format: 'yyyy-mm-dd',
+        minView: "month", //选择日期后，不会再跳转去选择时分秒
+        autoclose:true //选择日期后自动关闭
+    });
+    function search_user_plan() {
+        $('#table').bootstrapTable({
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc ",
+            pageSize: 10,
+            pageList: [10, 20, 50],
+            url: 'http://192.168.0.170:15000/yc-crm/user/plan/search',
+            queryParams: setParams,
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id ",
+            columns: [
+                {
+                    width: 20,
+                    field: 'name',
+                    title: '姓名',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+
+                },
+                {
+                    width: 20,
+                    field: 'nick_name',
+                    title: '昵称',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'subject_name',
+                    title: '科目',
+                    align: 'center',
+                    formatter: function (value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+                 },
+                {
+                    width: 20,
+                    field: 'number',
+                    title: '轮次',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?"第"+value+"轮":"暂无数据";
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'target_start_time',
+                    title: '计划开始时间',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'target_end_time',
+                    title: '计划结束时间',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'plan_real_endtime',
+                    title: '计划实际结束时间',
+                    align: 'center',
+                    formatter:function(value) {
+                        return  value!=null?value:"暂无数据"
+                    }
+                },
+                {
+                    width: 20,
+                    field: '',
+                    title: '本科目本轮星星数',
+                    align: 'center',
+                    formatter:function(value, row, index) {
+                        if(row){
+                            var count=0;
+                            if(row.t_star){
+                                var t_star=row.t_star.split(" ");
+                                for(var i=0;i<t_star.length;i++){
+                                    count+=parseInt(t_star[i]);
+                                }
+                            }
+                           if(row.p_star){
+                               var p_star=row.p_star.split(" ");
+                               for(var i=0;i<p_star.length;i++){
+                                   count+=parseInt(p_star[i]);
+                               }
+                           }
+                           if(row.w_star){
+                               var w_star=row.w_star.split(" ");
+                               for(var i=0;i<w_star.length;i++){
+                                   count+=parseInt(w_star[i]);
+                               }
+                           }
+                           if(row.i_star){
+                               var i_star=row.i_star.split(" ");
+                               for(var i=0;i<i_star.length;i++){
+                                   count+=parseInt(i_star[i]);
+                               }
+                           }
+
+                            return count
+                        }
+                       else{
+                            return "暂无数据"
+                        }
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'user_star',
+                    title: '用户获取星星数',
+                    align: 'center',   align: 'center',
+                    formatter:function(value, row, index) {
+                    if(row) {
+                        var count = 0;
+                        if (row.t_userstar) {
+                            var t_userstar = row.t_userstar.split(" ");
+                            for (var i = 0; i < t_userstar.length; i++) {
+                                count += parseInt(t_userstar[i]);
+                            }
+                        }
+                        if (row.p_userstar) {
+                            var p_userstar = row.p_userstar.split(" ");
+                            for (var i = 0; i < p_userstar.length; i++) {
+                                count += parseInt(p_userstar[i]);
+                            }
+                        }
+                        if (row.w_userstar) {
+                            var w_userstar = row.w_userstar.split(" ");
+                            for (var i = 0; i < w_userstar.length; i++) {
+                                count += parseInt(w_userstar[i]);
+                            }
+                        }
+                        if (row.i_userstar) {
+                            var i_userstar = row.i_userstar.split(" ");
+                            for (var i = 0; i < i_userstar.length; i++) {
+                                count += parseInt(i_userstar[i]);
+                            }
+                        }
+                        return count
+                    }
+                    else{
+                        return "暂无数据"
+                    }
+                   }
+                },
+                {
+                    width: 50,
+                    field: '',
+                    title: '基本操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var info = "<a onclick='jump_to_per_user_plan(\""+row.user_basic_id+"\")'>详情&nbsp;</a>";
+                        return info ;
+                    }
+                }
+            ],
+            pagination: true
+        })
+        $('#table').bootstrapTable('refresh');
+    }
+    function setParams(arg) {
+
+        var param = {};
+        var name = $('#name').val();
+        if (name) {
+            param.name=name;
+        }
+        var subject = $('#subject').val();
+        if (subject) {
+            param.subject=subject;
+        }
+        var number = $('#number').val();
+        if (number) {
+            param.number=number;
+        }
+
+        var plan_start_begin = $('#plan_start_begin').val();
+        if (plan_start_begin) {
+            param.plan_start_begin=plan_start_begin;
+        }
+        var plan_start_end = $('#plan_start_end').val();
+        if (plan_start_end) {
+            param.plan_start_end=plan_start_end;
+        }
+
+        var plan_end_begin = $('#plan_end_begin').val();
+        if (plan_end_begin) {
+            param.plan_end_begin=plan_end_begin;
+        }
+        var plan_end_end = $('#plan_end_end').val();
+        if (plan_end_end) {
+            param.plan_end_end=plan_end_end;
+        }
+        var real_start = $('#real_start').val();
+        if (real_start) {
+            param.real_start=real_start;
+        }
+        var real_end = $('#real_end').val();
+        if (plan_start_end) {
+            param.real_end=real_end;
+        }
+        param.plat="0";
+        arg.param=JSON.stringify(param);
+        return arg;
+    }
+    function jump_to_per_user_plan(id){
+        window.location.href = "user_plan_info.html?id='"+id+"'";
+    }
+</script>

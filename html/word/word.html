@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>基础题库</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/style.css">
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../bootstraptable/bootstrap-table.js"></script>
+    <script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置>题库管理>单词管理</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row search_Div">
+            <form class="form-inline">
+                <div class="form-group col-xs-2">
+                    <label>单词：</label>
+                    <input id="w_word" class="form-control">
+                    </input>
+                </div>
+                <div class="form-group col-xs-2">
+                    <label>创建人：</label>
+                    <input id="w_creator" class="form-control">
+                    </input>
+                </div>
+                <div class="form-group col-xs-2">
+                    <label>创建时间：</label>
+                    <input id="w_btime" type="text" class="form-control datetime">
+                </div>
+                <div class="form-group col-xs-4     ">
+                    <label>截止时间：</label>
+                    <input id="w_etime" type="text" class="form-control datetime">
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="search_words()">查询</button>
+                    <button type="button" class="btn btn-default" id="addItemBtn" onclick="jump_to_per_word('',2)">新建</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+        <table class="table" id="table">
+        </table>
+
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        $('.datetime').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true //选择日期后自动关闭
+        });
+    })
+    function search_words() {
+        $('#table').bootstrapTable({
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc ",
+            pageSize: 10,
+            pageList: [10, 20, 50],
+            url: 'http://192.168.0.170:15000/yc-crm/word/search',
+            queryParams: setParams,
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id ",
+            columns: [
+             /*   {
+                    width: 20,
+                    checkbox: true,
+                },
+                {
+                    width: 20,
+                    field: 'id',
+                    title: 'id',
+                    align: 'center'
+                },*/
+                {
+                    width: 20,
+                    field: 'word',
+                    title: '单词',
+                    align: 'center'
+                },
+                {
+                    width: 20,
+                    field: 'year',
+                    title: '年份',
+                    align: 'center',
+                },
+                {
+                    width: 20,
+                    field: 'creator',
+                    title: '创建人',
+                    align: 'center',
+                },
+                {
+                    width: 20,
+                    field: 'create_time',
+                    title: '创建时间',
+                    align: 'center',
+                    formatter: function (value) {
+                        return value.substring(0,4);
+                    }
+                },
+                {
+                    width: 20,
+                    field: 'type',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function (value) {
+                        return value == 0 ? '启用' : '停用';
+                    }
+                },
+                {
+                    width: 50,
+                    field: '',
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var info = '<a onclick="jump_to_per_word(' + row.id + ',0)">详情&nbsp;</a>>';
+                        var modify = '<a onclick="jump_to_per_word(' + row.id + ',1)">修改&nbsp;</a>>';
+                        var del = '<a onclick="delete_word(' + row.id + ')">删除&nbsp;</a>>';
+                        return info + modify + del;
+
+                    }
+                }
+            ],
+            pagination: true
+        });
+        $('#w_table').bootstrapTable('refresh');
+    }
+    function setParams(arg) {
+
+        var param = '{';
+
+        var word = $('#w_word').val();
+        if (word != null && word != undefined && word != '') {
+            param += '"word":"' + word + '",';
+        }
+        var creator = $('#w_creator').val();
+        if (creator != null && creator != undefined && creator != '') {
+            param += '"creator":"' + creator + '",';
+        }
+        var btime = $('#w_btime').val();
+        if (btime != null && btime != undefined && btime != '') {
+            param += '"btime":"' + btime + '",';
+        }
+        var etime = $('#w_etime').val();
+        if (etime != null && etime != undefined && etime != '') {
+            param += '"etime":"' + etime + '",';
+        }
+        /*var lable = $('w_lable').val();
+        if (lable != null && lable != undefined && lable != '') {
+            param += '"lable":"' + lable + '",';
+        }
+        var type = $("#w_type").find("option:selected").val();
+        param += '"type":"' + type + '",';
+
+        var year = $('#w_year').val();
+        if (year != null && year != undefined && year != '') {
+            param += '"year":"' + year + '",';
+        }*/
+        param += '"plat":"0"';
+        param += '}';
+        arg.param = param;
+        return arg;
+    }
+    function jump_to_per_word(id, arg) {
+        if (id) {
+            if (arg == 0) {
+                window.location.href = "word_info.html?id="+id;
+            }
+            if (arg == 1) {
+                window.location.href = "word_edit.html?id="+id;
+            }
+        }else{
+            if (arg == 2) {
+                window.location.href = "word_add.html";
+            }
+        }
+    }
+    function delete_word(id) {
+        alert("");
+        var param = '{';
+        if (id != null && id != undefined && id != '') {
+            param += '"id":"' + id + '"';
+        }
+        param += '}';
+        $.ajax({
+            url: 'http://192.168.0.170:15000/yc-crm/word/delete/' + param,
+            type: 'post',
+            dataType: "json",
+            success: function (msg) {
+                if (msg.status == "0") {
+                    alert("删除成功");
+                    $('#table').bootstrapTable('refresh');
+                }
+            }
+        })
+    }
+</script>

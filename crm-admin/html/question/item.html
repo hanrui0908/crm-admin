@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>基础题库</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+    <!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../bootstraptable/bootstrap-table.js"></script>
+    <script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置>题库管理>基础题库</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row search_Div">
+            <form class="form-inline">
+                <div class="form-group col-xs-3">
+                    <label>题目：</label>
+                    <input type="text" id="item_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>科目：</label>
+                    <select id="item_subject" class="form-control">
+                        <option value="0">全部</option>
+                        <option value="1">英语</option>
+                        <option value="2">高数</option>
+                        <option value="3">政治</option>
+                    </select>
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>题型：</label>
+                    <select id="item_type" class="form-control">
+                        <option value="0">全部</option>
+                        <option value="1">单选</option>
+                        <option value="2">填空</option>
+                        <option value="3">解答</option>
+                        <option value="4">多选</option>
+                        <option value="5">材料</option>
+                        <option value="6">完型</option>
+                        <option value="7">阅读</option>
+                        <option value="8">7选5</option>
+                        <option value="9">翻译</option>
+                        <option value="10">排序</option>
+                        <option value="11">小作文</option>
+                        <option value="12">大作文</option>
+                        <option value="13">证明</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xs-3">
+                    <label>状态：</label>
+                    <select id="type" class="form-control">
+                        <option value="0">全部</option>
+                        <option value="1">启用</option>
+                        <option value="2">停用</option>
+                    </select>
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>创建时间：</label>
+                    <input id="item_begin_time" type="text" class="form-control datetime">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>截止时间：</label>
+                    <input id="item_end_time" type="text" class="form-control datetime">
+                </div>
+
+
+                <div class="form-group col-xs-3 col-md-offset-9">
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="search_item()">查询</button>
+                    <button type="button" class="btn btn-default" id="addItemBtn">新建</button>
+                </div>
+            </form>
+        </div>
+        <table class="table" id="table" border="" cellspacing="" cellpadding="">
+        </table>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+   function search_item() {
+       dataList();
+       $('#table').bootstrapTable('refresh');
+   }
+
+    function dataList() {
+        $('#table').bootstrapTable({
+            //请求方法
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc",
+            //pageNumber:1,
+            pageSize: 5,
+            pageList: [5, 25, 50],
+            url: "http://192.168.0.137:8080/yc-crm/item/search",
+            queryParams: function(params) {
+                var paramObj = {
+                    name : $("#item_name").val(),//名称
+                    subject : $("#item_subject").val(),//科目
+                    begintime : $("#item_begin_time").val(),//创建时间
+                    endtime : $("#item_begin_time").val(),//截止时间
+                    item_type : $("#lore_star_index").val(),//星级
+                    type : $("#type").val(),//状态
+                    plat : '0'
+                };
+                params.param = JSON.stringify(paramObj);
+                return params;
+            },
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id",
+            columns: [{
+                field: 'name',
+                title: '名称',
+                align: 'center'
+            },
+                {
+                    field: 'subject',
+                    title: '科目',
+                    align: 'center'
+                },
+                {
+                    field: 'item_type',
+                    title: '题型',
+                    align: 'center'
+                },
+                {
+                    field: 'year',
+                    title: '年份',
+                    align: 'center'
+                },
+                {
+                    field: 'creator',
+                    title: '创建人',
+                    align: 'center'
+                },
+                {
+                    field: 'create_time',
+                    title: '创建时间',
+                    align: 'center'
+                },
+                {
+                    field: 'type',
+                    title: '状态',
+                    align: 'center',
+                    formatter:function(value, row, index){
+                        var html = "启用";
+                        if(row.type == 1){
+                            html = "停用";
+                        }
+                        return html;
+                    }
+                },{
+                    field: 'id',
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var html = "<div class='btn-group' role='group' aria-label='...'>"+
+                            "  <a class='btn btn-info btn-xs' href='item_info.html?id="+row.id+"' role='button'>详情</a>"+
+                            "  <a class='btn btn-primary btn-xs' href='item_add.html?id="+row.id+"' role='button'>编辑</a>"+
+                            "  <a class='btn btn-danger btn-xs' href='javascript:;' role='button' onclick='delete_a_item("+row.id+")'>删除</a>"+
+                            "</div>";
+                        return html;
+
+                    }
+                }],
+            pagination: true
+        });
+    }
+   $("#submitBtn").click(function(){//查询
+       $('#table').bootstrapTable('refresh'); //刷新
+   });
+   $("#addItemBtn").click(function(){//新建
+       window.location.href="item_add.html?id=-1";
+   })
+    $(function(){
+        $('.datetime').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true //选择日期后自动关闭
+        });
+    })
+    function delete_a_item(id) {
+        $.ajax({
+            url:"http://192.168.0.137:8080/yc-crm/item/delete/{id:"+id+"}",
+            type: "post",
+            dataType: "json",
+            success: function (msg) {
+                alert('删除成功');
+                $('#table').bootstrapTable('refresh');
+            }
+        })
+    }
+</script>

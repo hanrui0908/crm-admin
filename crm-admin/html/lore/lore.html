@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>知识点列表</title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+		<!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+		<script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script src="../../bootstraptable/bootstrap-table.js"></script>
+    	<script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">当前位置>题库管理>知识点</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="row search_Div">
+		  		<form class="form-inline">
+				  <div class="form-group col-xs-3">
+				    <label>名称：</label>
+				    <input type="text" id="lore_name_index" class="form-control">
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>科目：</label>
+				    <select id="lore_sub_index" class="form-control">
+					  <option value="">全部</option>
+					</select>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>年份：</label>
+				    <select id="lore_year_index" class="form-control">
+					  <option value="">全部</option>
+					</select>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>星级：</label>
+				    <input id="lore_star_index" type="text" class="form-control">
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>创建时间：</label>
+				    <input id="lore_begin_time_index" type="text" class="form-control datetime">
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>截止时间：</label>
+				    <input id="lore_end_time" type="text" class="form-control datetime">
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>状态：</label>
+				    <select id="lore_type_index" class="form-control">
+					  <option value="-1">全部</option>
+					  <option value="0">启用</option>
+					  <option value="1">停用</option>
+					</select>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>重要程度：</label>
+				   <input type="text"id="lore_important_index" class="form-control"/>
+				  </div>
+				  <div class="form-group col-xs-3 col-md-offset-9" style="padding: 10px 0;">
+				  	<button type="button" class="btn btn-primary" id="submitBtn">查询</button>
+				  	<button type="button" class="btn btn-default" id="addItemBtn">新建</button>
+				  </div>
+				</form>
+		  	</div>
+		    <table class="table" id="table">
+		    </table>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	function dataList() {
+        $('#table').bootstrapTable({
+            //请求方法
+            method: 'get',
+            striped: true,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "asc",
+            //pageNumber:1,
+            pageSize: 5,
+            pageList: [5, 25, 50],
+			url: "http://192.168.0.137:8080/yc-crm/lore/head/search",
+            queryParams: function(params) {
+                var paramObj = {
+				    name : $("#lore_name_index").val(),//名称
+				    subject : $("#lore_sub_index").val(),//科目
+				    begintime : $("#lore_begin_time_index").val(),//创建时间
+				    endtime : $("#lore_end_time").val(),//截止时间
+				    stars : $("#lore_star_index").val(),//星级
+				    important : $("#lore_important_index").val(),//重要程度
+				    year : $("#lore_year_index").find("option:selected").text(),//年份
+				    type : $("#lore_type_index").val(),//状态
+				    plat : '0'
+			    };
+                params.param = JSON.stringify(paramObj);
+                return params;
+            },
+            sidePagination: "server",
+            search: false,
+            strictSearch: false,
+            idField: "id",
+            columns: [{
+                field: 'name',
+                title: '名称',
+                align: 'center'
+            },
+            {
+                field: 'subject',
+                title: '科目',
+                align: 'center'
+            },
+            {
+                field: 'year',
+                title: '年份',
+                align: 'center'
+            },
+            {
+                field: 'create_time',
+                title: '创建时间',
+                align: 'center'
+            },
+            {
+                field: 'important',
+                title: '重要程度',
+                align: 'center'
+            },
+            {
+                field: 'stars',
+                title: '星级',
+                align: 'center'
+            },
+            {
+                field: 'type',
+                title: '状态',
+                align: 'center',
+                formatter:function(value, row, index){
+                	var html = "启用";
+                	if(row.type == 1){
+                		html = "停用";
+                	}
+                	return html;
+                }
+            },{
+                field: 'id',
+                title: '操作',
+                align: 'center',
+                formatter: function(value, row, index) {
+					var html = "<div class='btn-group' role='group' aria-label='...'>"+
+						"  <a class='btn btn-info btn-xs' href='lore_info.html?id="+row.id+"' role='button'>详情</a>"+
+						"  <a class='btn btn-primary btn-xs' href='lore_head_edit.html?id="+row.id+"' role='button'>编辑</a>"+
+                        "  <a class='btn btn-primary btn-xs' href='edit_lore_tree.html?id="+row.id+"' role='button'>数形维护</a>"+
+						"  <a class='btn btn-danger btn-xs' href='javascript:;' role='button' onclick='delete_a_lore_head("+row.id+")'>删除</a>"+
+					"</div>";
+					return html;
+						    	
+                }
+            }],
+            pagination: true
+        });
+    }
+
+	$(function(){
+//科目
+        $("#lore_sub_index").html("<option value='0'>全部</option>"+get_sub());
+        //年份
+        $("#lore_year_index").html("<option value='0'>全部</option>"+get_year());
+        $('.datetime').datetimepicker({
+	        language:  'zh-CN',
+	        format: 'yyyy-mm-dd',
+	        minView: "month", //选择日期后，不会再跳转去选择时分秒
+	        autoclose:true //选择日期后自动关闭
+	    });
+	    dataList();
+	    $("#submitBtn").click(function(){//查询
+	    	$('#table').bootstrapTable('refresh'); //刷新
+	    });
+	    $("#addItemBtn").click(function(){//新建
+	    	window.location.href="lore_head_add.html";
+	    })
+    })
+	function delete_a_lore_head(id) {
+        $.ajax({
+            url:"http://192.168.0.137:8080/yc-crm/lore/head/delete/{id:"+id+"}",
+            type: "post",
+            dataType: "json",
+            success: function (msg) {
+              alert('删除成功');
+            }
+        })
+    }
+
+</script>

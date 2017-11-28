@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>编辑教材</title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<link  href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="../../zTree_v3/css/demo.css" type="text/css">
+	    <link rel="stylesheet" href="../../zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
+	    <script src="../../zTree_v3/js/jquery.ztree.core.min.js"></script>
+	    <script src="../../zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+	    <script src="../../zTree_v3/js/jquery.ztree.exedit.min.js"></script>
+	    <script src="../../ueditor/ueditor.config.js"></script>
+	    <script src="../../ueditor/ueditor.all.js"></script>
+	    <script src="../../ueditor/lang/zh-cn/zh-cn.js"></script>
+	    <script src="../../ueditor/kityformula-plugin/addKityFormulaDialog.js"></script>
+	    <script src="../../ueditor/kityformula-plugin/getKfContent.js"></script>
+	    <script src="../../ueditor/kityformula-plugin/defaultFilterFix.js"></script>
+	    <style>
+	    	ul{
+	    		padding: 0;
+	    	}
+	    	ul,li{
+	    		display: block;
+	    	}
+	    	.knowledge_Div{
+	    		border:1px solid #ccc;
+	    		height: 300px;
+	    		overflow-y: scroll;
+	    	}
+	    	.know_right li a{
+	    		float: right;
+	    	}
+	    </style>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">当前位置：题库管理>教材列表>编辑教材章节</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="row">
+		  		<div class="col-xs-6">
+	  				<form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">名称</label>
+					    <div class="col-xs-10 form-control-static">
+					    	name
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">年份</label>
+					    <div class="col-xs-10 form-control-static">
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">科目</label>
+					    <div class="col-xs-10 form-control-static">
+					    </div>
+					  </div>
+					  <!--<div class="form-group">
+					    <label class="col-xs-2 control-label" for="">添加封面</label>
+					    <div class="col-xs-10">
+					    	<input type="file" id="pic_url">
+					    </div>
+					  </div>-->
+					  
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">状态</label>
+					    <div class="col-xs-10 form-control-static">
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">星级</label>
+					    <div class="col-xs-10 form-control-static">
+					    	
+					    </div>
+					  </div>
+					</form>
+		  		</div>
+		  		<div class="col-xs-6">
+		  			<form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">封面</label>
+					    <div class="col-xs-10">
+					    	<img src="https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3295845106,3074464553&fm=173&s=3C287433130C554B1CCDA1D6030080A0&w=218&h=146&img.JPG"/>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-2 control-label" for="">描述</label>
+					    <div class="col-xs-10 form-control-static">
+					    	
+					    </div>
+					  </div>
+					  
+					</form>
+		  		</div>
+		  	</div>
+		  	<div class="row">
+		  		<div class="col-xs-4">
+		  			<ul id="treeDemo" class="ztree"></ul>
+		  		</div>
+		  		<div class="col-xs-8">
+		  			<div class="row">
+	                    <div class="col-xs-10">
+	                        <h2 class="this_name"></h2>
+	                    </div>
+	                    <div class="col-xs-2 text-right">
+	                        <button id="keepBtn" type="button" class="btn btn-default">保存节点内容</button>
+	                    </div>
+	                </div>
+	                <div id="editor" style="width:100%;height: 320px; margin-top: 10px;">
+	                	
+                	</div>
+                	<p class="bg-info" style="margin: 10px 0; padding: 10px 5px;">关联知识点</p>
+                	<div class="row">
+                		<div class="col-xs-5 knowledge_Div">
+                			<ul class="know_left">
+                				<li><label><input type="checkbox" value="1" />知识点名称1</label></li>
+                				<li><label><input type="checkbox" value="2" />知识点名称2</label></li>
+                				<li><label><input type="checkbox" value="3" />知识点名称3</label></li>
+                				<li><label><input type="checkbox" value="4" />知识点名称4</label></li>
+                				<li><label><input type="checkbox" value="5" />知识点名称5</label></li>
+                				<li><label><input type="checkbox" value="6" />知识点名称6</label></li>
+                				
+                			</ul>
+                		</div>
+                		<div class="col-xs-2" style="padding-top: 100px;">
+                			<button type="button" class="btn btn-default btn-block andKnowBtn">添加</button>
+                		</div>
+                		<div class="col-xs-5 knowledge_Div">
+                			<ul class="know_right">
+                				
+                			</ul>
+                		</div>
+                	</div>
+		  		</div>
+		  		<div class="col-xs-12 text-center" style="margin-top: 10px;">
+		  			<button type="button" class="btn btn-primary" id="addItem">保存</button>
+					<button type="button" class="btn btn-default" id="revert">返回</button>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+		
+	</body>
+</html>
+<script>
+	var contains = function (obj,arr) {
+		var i = arr.length;  
+	    while (i--) {
+	        if (arr[i].id === obj.id) {  
+	            return true;  
+	        }  
+	    }  
+	    return false;  
+	}
+	var ue = UE.getEditor('editor', {
+        toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'bold', 'underline', 'italic', 'test', 'insertimage', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'fontsize', 'kityformula']],
+        wordCount: false,
+        enableAutoSave: false
+    });
+    var id = "";
+	$(function(){
+		id = GetQueryString("id");
+		//科目
+		//$("#subject").html("<option value=''>请选择</option>"+get_sub());
+		//年份
+		//$("#year").html("<option value=''>请选择</option>"+get_year());
+		$("#addItem").click(function(){//添加
+			//获得左侧树信息
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.getNodes();
+            var temp=JSON.stringify(nodes);
+            var json=JSON.parse(temp.substring(1,temp.length-1));
+            var tree=json_delete_elements(json);
+            var obj = {};
+            var obj = {
+                id: id,
+                json: JSON.stringify(tree)
+            }
+            console.log(obj);
+           $.ajax({
+                url: "http://192.168.0.137:8080/yc-crm/teach/material/update/json?param='" + encodeURIComponent(JSON.stringify(obj)) + "'",
+                type: "post",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == 0) {
+                        alert("编辑成功");
+                    }
+                }
+            });
+			//获得关联知识点信息
+			
+		});
+		$(".andKnowBtn").click(function(){
+			let knowLeft = $(".know_left").find("input[type='checkbox']");
+			var	arr0 =[];
+			for(var i = 0;i<knowLeft.length;i++){
+				if(knowLeft.eq(i).is(":checked")){//判断哪个被选中
+					var obj = {};
+					console.log(knowLeft.eq(i).val())
+					arr0.push({
+						id:knowLeft.eq(i).val(),
+						name:knowLeft.eq(i).parents("label").text()
+					});
+				}
+			}
+			
+			if(arr0.length==0)
+				return;
+			console.log(arr0);
+			var knowRight = $(".know_right").find("li");
+			if(knowRight.length!=0){
+				var arr1 = [];
+				for (var i = 0; i < knowRight.length; i++) {
+					arr1.push({
+						id:knowRight.eq(i).data("id"),
+						name:knowRight.eq(i).children("label").html()
+					})
+				}
+				var html = ""
+				for (var i = 0; i < arr0.length; i++) {
+					var obj = {
+						id:parseInt(arr0[i].id),
+						name:arr0[i].name
+					}
+					if(!contains(obj,arr1)){
+						html += "<li data-id='"+arr0[i].id+"'><label>"+arr0[i].name+"</label><a href='javascript:;'>删除</a></li>";
+					}
+				}
+				$(".know_right").append(html);
+			}else{
+				var html = "";
+				for (var obji = 0;obji<arr0.length;obji++) {
+					html += "<li data-id='"+arr0[obji].id+"'><label>"+arr0[obji].name+"</label><a href='javascript:;'>删除</a></li>";
+				}
+				$(".know_right").html(html);
+			}
+		});
+		$(".know_right").on("click","a",function(){
+			$(this).parents("li").remove();
+		});
+		$("#revert").click(function(){
+			window.location.href="list.html";
+		});
+		var url = "http://192.168.0.137:8080/yc-crm/teach/material/search";
+		$.ajax({
+	        url: url,
+	        type: 'post',
+	        dataType: "json",
+	        data:{
+	//      	param: "{id:'" + id + "'}"
+	        	param:JSON.stringify({id:id})
+	        },
+	//      contentType: false,
+	//      processData: false,
+	        success: function (msg) {
+	        	console.log(msg.result.result[0].structure)
+	        	if(msg.result.result[0].structure == "null"){
+					var zNodes = [{name: "父节点1",content:"",children: []}];
+	        	}else{
+	        		var zNodes = JSON.parse(msg.result.result[0].structure);
+	        	}
+				zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	        }
+	    })
+		
+		
+		$("#keepBtn").click(function () {
+
+            //获得编辑器内容
+            var rightContent = UE.getEditor('editor').getContent();
+            //保存到左侧树结构
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            if (nodes.length == 0) {
+                alerts("请先选择一个节点");
+                return;
+            }
+            treeNode.content = rightContent;
+            zTree.cancelEditName(treeNode);
+            alerts("右侧内容保存到左侧树目录成功，保存数据需要点击下方提交按钮");
+        });
+        $("#revert").click(function(){
+			window.location.href="list.html";
+		});
+	});
+</script>
+<script>
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false,
+
+        },
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: false
+            }
+        },
+        edit: {
+            enable: true
+        },
+        callback: {
+            onRename: zTreeOnRename,
+            onRemove: zTreeOnRemove,
+            onClick: onClick
+        }
+    };
+    function onClick(event, treeId, treeNode, clickFlag) {
+    	console.log(treeNode.content)
+        $(".this_name").html(treeNode.name);
+        UE.getEditor('editor').setContent(treeNode.content);
+        clickNode = treeNode;
+    }
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_" + treeNode.tId);
+        if (btn) btn.bind("click", function () {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.addNodes(treeNode, {id: (100 + newCount), pId: treeNode.id, name: "新节点",content:""});
+            return false;
+        });
+    };
+
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_" + treeNode.tId).unbind().remove();
+    };
+
+    function zTreeOnRename() {
+
+        var selected_node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+    }
+
+    function zTreeOnRemove() {
+        var selected_nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        var tree = $.fn.zTree.getZTreeObj("treeDemo")
+　　　　//删除树的多余信息
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            tree.removeNode(selected_nodes[i]);
+        }
+    }
+    function json_delete_elements(json) {
+        if(json.check_Child_State==undefined){
+            if(json.children==undefined){
+                return json;
+            }
+            if(json.children!=undefined){
+                for(var i=0;i<json.children.length;i++){
+                    if(json.children[i].check_Child_State==undefined){
+                    }else{
+                        delete json.children[i].check_Child_State;
+                        delete json.children[i].check_Focus;
+                        delete json.children[i].checked;
+                        delete json.children[i].checkedOld;
+                        delete json.children[i].chkDisabled;
+                        delete json.children[i].editNameFlag;
+                        delete json.children[i].halfCheck;
+                        delete json.children[i].isAjaxing;
+                        delete json.children[i].isHover;
+                        delete json.children[i].isFirstNode;
+                        delete json.children[i].isLastNode;
+                        delete json.children[i].isParent;
+                        delete json.children[i].level;
+                        delete json.children[i].nocheck;
+                        delete json.children[i].open;
+                        delete json.children[i].pId;
+                        delete json.children[i].parentTId;
+                        delete json.children[i].tId;
+                        delete json.children[i].zAsync;
+
+                        json_delete_elements(json.children[i]);
+                    }
+                }
+                return json;
+            }
+        }else{
+            delete json.check_Child_State;
+            delete json.check_Focus;
+            delete json.checked;
+            delete json.checkedOld;
+            delete json.chkDisabled;
+            delete json.editNameFlag;
+            delete json.halfCheck;
+            delete json.isAjaxing;
+            delete json.isHover;
+            delete json.isFirstNode;
+            delete json.isLastNode;
+            delete json.isParent;
+            delete json.level;
+            delete json.nocheck;
+            delete json.open;
+            delete json.pId;
+            delete json.parentTId;
+            delete json.tId;
+            delete json.zAsync;
+            if(json.children==undefined){
+                return json;
+            }
+            if(json.children!=undefined){
+                for(var i=0;i<json.children.length;i++){
+                    if(json.children[i].check_Child_State==undefined){
+                    }else{
+                        delete json.children[i].check_Child_State;
+                        delete json.children[i].check_Focus;
+                        delete json.children[i].checked;
+                        delete json.children[i].checkedOld;
+                        delete json.children[i].chkDisabled;
+                        delete json.children[i].editNameFlag;
+                        delete json.children[i].halfCheck;
+                        delete json.children[i].isAjaxing;
+                        delete json.children[i].isHover;
+                        delete json.children[i].isFirstNode;
+                        delete json.children[i].isLastNode;
+                        delete json.children[i].isParent;
+                        delete json.children[i].level;
+                        delete json.children[i].nocheck;
+                        delete json.children[i].open;
+                        delete json.children[i].pId;
+                        delete json.children[i].parentTId;
+                        delete json.children[i].tId;
+                        delete json.children[i].zAsync;
+                        json_delete_elements(json.children[i]);
+                    }
+                }
+                return json;
+            }
+        }
+    }
+
+</SCRIPT>

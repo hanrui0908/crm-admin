@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title></title>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <!--<link href="../../css/style.css" rel="stylesheet">-->
+    <link href="../../css/style-responsive.css" rel="stylesheet"/>
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="../../bootstraptable/bootstrap-table.js"></script>
+    <script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+    <script>
+        $(function () {
+            $('.datetime').datetimepicker({
+                language: 'zh-CN',
+                format: 'yyyy-mm-dd',
+                minView: "month", //选择日期后，不会再跳转去选择时分秒
+                autoclose: true //选择日期后自动关闭
+            });
+            search_tab();
+            search_sub();
+            search_year();
+            search_from();
+        });
+        function search_tab(id) {
+            console.log("into search_tab function");
+            $('#tab_table').bootstrapTable({
+                method: 'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc ",
+                pageSize: 10,
+                pageList: [10, 20, 50],
+                url: 'http://192.168.0.170:15000/yc-crm/tab/search',
+                queryParams: setTabParams,
+                sidePagination: "server",
+                search: false,
+                strictSearch: false,
+                idField: "id ",
+                columns: [
+                    {
+                        width: 60,
+                        field: 'name',
+                        title: '名称',
+                        align: 'center'
+                    },
+                    {
+                        width: 100,
+                        field: 'create_time',
+                        title: '创建时间',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: 'creater',
+                        title: '创建人',
+                        align: 'center',
+                    },
+                    {
+                        width: 30,
+                        field: 'type',
+                        title: '状态',
+                        align: 'center',
+                        formatter: function (value) {
+                            return value ==0 ? '启用' : '停用';
+                        }
+                    },
+                    {
+                        width: 100,
+                        field: 'note',
+                        title: '备注',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: '',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var info = '<a onclick="jump_to_per(' + row.id + ',0)">详情&nbsp;</a>>';
+                            var modify = '<a onclick="jump_to_modify(' + row.id + ',0)">修改&nbsp;</a>>';
+                            var del = '<a onclick="del(' + row.id + ',0)">删除&nbsp;</a>>';
+                            return info + modify + del;
+
+                        }
+                    }
+                ],
+                pagination: true
+            });
+            $('#tab_table').bootstrapTable('refresh');
+
+        }
+
+        function search_sub(id) {
+            console.log("into search_sub function");
+            $('#sub_table').bootstrapTable({
+                method: 'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc ",
+                pageSize: 5,
+                pageList: [5, 20, 50],
+                url: 'http://192.168.0.170:15000/yc-crm/sub/search',
+                queryParams: setSubParams,
+                sidePagination: "server",
+                search: false,
+                strictSearch: false,
+                idField: "id ",
+                columns: [
+                    {
+                        width: 60,
+                        field: 'name',
+                        title: '名称',
+                        align: 'center'
+                    },
+                    {
+                        width: 100,
+                        field: 'create_time',
+                        title: '创建时间',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: 'creater',
+                        title: '创建人',
+                        align: 'center',
+                    },
+                    {
+                        width: 30,
+                        field: 'type',
+                        title: '状态',
+                        align: 'center',
+                        format: function (value) {
+                            return value == 0 ? '启用' : '停用';
+                        }
+                    },
+                    {
+                        width: 100,
+                        field: 'note',
+                        title: '备注',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: '',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var info = '<a onclick="jump_to_per(' + row.id + ',1)">详情&nbsp;</a>>';
+                            var modify = '<a onclick="jump_to_modify(' + row.id + ',1)">修改&nbsp;</a>>';
+                            var del = '<a onclick="del(' + row.id + ',1)">删除&nbsp;</a>>';
+                            return info + modify + del;
+
+                        }
+                    }
+                ],
+                pagination: true
+            });
+            $('#sub_table').bootstrapTable('refresh');
+
+        }
+
+        function search_year(id) {
+            console.log("into search_year function");
+            $('#year_table').bootstrapTable({
+                method: 'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc ",
+                pageSize: 10,
+                pageList: [10, 20, 50],
+                url: 'http://192.168.0.170:15000/yc-crm/year/search',
+                queryParams: setYearParams,
+                sidePagination: "server",
+                search: false,
+                strictSearch: false,
+                idField: "id ",
+                columns: [
+                    {
+                        width: 60,
+                        field: 'name',
+                        title: '名称',
+                        align: 'center'
+                    },
+                    {
+                        width: 100,
+                        field: 'create_time',
+                        title: '创建时间',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: 'creater',
+                        title: '创建人',
+                        align: 'center',
+                    },
+                    {
+                        width: 30,
+                        field: 'type',
+                        title: '状态',
+                        align: 'center',
+                        format: function (value) {
+                            return value == 0 ? '启用' : '停用';
+                        }
+                    },
+                    {
+                        width: 100,
+                        field: 'note',
+                        title: '备注',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: '',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var info = '<a onclick="jump_to_per(' + row.id + ',2)">详情&nbsp;</a>>';
+                            var modify = '<a onclick="jump_to_modify(' + row.id + ',2)">修改&nbsp;</a>>';
+                            var del = '<a onclick="del(' + row.id + ',2)">删除&nbsp;</a>>';
+                            return info + modify + del;
+
+                        }
+                    }
+                ],
+                pagination: true
+            });
+            $('#year_table').bootstrapTable('refresh');
+
+        }
+
+        function search_from(id) {
+            console.log("into search_from function");
+            $('#from_table').bootstrapTable({
+                method: 'get',
+                striped: true,
+                cache: false,
+                pagination: true,
+                sortable: false,
+                sortOrder: "asc ",
+                pageSize: 10,
+                pageList: [10, 20, 50],
+                url: 'http://192.168.0.170:15000/yc-crm/item/from/search',
+                queryParams: setFromParams,
+                sidePagination: "server",
+                search: false,
+                strictSearch: false,
+                idField: "id ",
+                columns: [
+                    {
+                        width: 60,
+                        field: 'name',
+                        title: '名称',
+                        align: 'center'
+                    },
+                    {
+                        width: 100,
+                        field: 'create_time',
+                        title: '创建时间',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: 'creater',
+                        title: '创建人',
+                        align: 'center',
+                    },
+                    {
+                        width: 30,
+                        field: 'type',
+                        title: '状态',
+                        align: 'center',
+                        format: function (value) {
+                            return value == 0 ? '启用' : '停用';
+                        }
+                    },
+                    {
+                        width: 100,
+                        field: 'note',
+                        title: '备注',
+                        align: 'center',
+                    },
+                    {
+                        width: 60,
+                        field: '',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var info = '<a onclick="jump_to_per(' + row.id + ',3)">详情&nbsp;</a>>';
+                            var modify = '<a onclick="jump_to_modify(' + row.id + ',3)">修改&nbsp;</a>>';
+                            var del = '<a onclick="del(' + row.id + ',3)">删除&nbsp;</a>>';
+                            return info + modify + del;
+                        }
+                    }
+                ],
+                pagination: true
+            });
+            $('#from_table').bootstrapTable('refresh');
+
+        }
+
+        function setTabParams(arg, id) {
+            var param = "{";
+            if (id != null || id != undefined) {
+                param += "'id':'" + id + "',";
+            }
+            var name = $("#tab_name").val();
+            if (name != null || name != undefined) {
+                param += "'name':'" + name + "',";
+            }
+            var create_time = $("#tab_time").val();
+            if (create_time != null || create_time != undefined) {
+                param += "'create_time':'" + create_time + "',";
+
+            }
+            param += "'plat':'" + 0 + "',";
+            param += "}";
+            arg.param = param;
+            return arg;
+        }
+
+        function setSubParams(arg, id) {
+            var param = "{";
+            if (id != null || id != undefined) {
+                param += "'id':'" + id + "',";
+            }
+            var name = $("#sub_name").val();
+            if (name != null || name != undefined) {
+                param += "'name':'" + name + "',";
+            }
+            var create_time = $("#sub_time").val();
+            if (create_time != null || create_time != undefined) {
+                param += "'create_time':'" + create_time + "',";
+            }
+            param += "'plat':'" + 0 + "',";
+            param += "}";
+            arg.param = param;
+            return arg;
+        }
+
+        function setYearParams(arg, id) {
+            var param = "{";
+            if (id != null || id != undefined) {
+                param += "'id':'" + id + "',";
+            }
+            var name = $("#year_name").val();
+            if (name != null || name != undefined) {
+                param += "'year':'" + name + "',";
+            }
+            var create_time = $("#year_time").val();
+            if (create_time != null || create_time != undefined) {
+                param += "'create_time':'" + create_time + "',";
+
+            }
+            param += "'plat':'" + 0 + "',";
+            param += "}";
+            arg.param = param;
+            return arg;
+        }
+
+        function setFromParams(arg, id) {
+            var param = "{";
+            if (id != null || id != undefined) {
+                param += "'id':'" + id + "',";
+            }
+            var name = $("#from_name").val();
+            if (name != null || name != undefined) {
+                param += "'name':'" + name + "',";
+            }
+            var create_time = $("#from_time").val();
+            if (create_time != null || create_time != undefined) {
+                param += "'create_time':'" + create_time + "',";
+            }
+            param += "'plat':'" + 0 + "',";
+            param += "}";
+            arg.param = param;
+            return arg;
+        }
+
+        function create(type) {
+            if (type == 0) {
+                window.location.href = "tab_add.html";
+            }
+            if (type == 1) {
+                window.location.href = "sub_add.html";
+            }
+            if (type == 2) {
+                window.location.href = "year_add.html";
+            }
+            if (type == 3) {
+                window.location.href = "from_add.html";
+            }
+        }
+
+        function jump_to_per(id, type) {
+            if (type == 0) {
+                window.location.href = "tab_info.html?id=" + id;
+            }
+            if (type == 1) {
+                window.location.href = "sub_info.html?id=" + id;
+            }
+            if (type == 2) {
+                window.location.href = "year_info.html?id=" + id;
+            }
+            if (type == 3) {
+                window.location.href = "from_info.html?id=" + id;
+            }
+        }
+
+        function jump_to_modify(id, type) {
+            if (type == 0) {
+                window.location.href = "tab_edit.html?id=" + id;
+            }
+            if (type == 1) {
+                window.location.href = "sub_edit.html?id=" + id;
+            }
+            if (type == 2) {
+                window.location.href = "year_edit.html?id=" + id;
+            }
+            if (type == 3) {
+                window.location.href = "from_edit.html?id=" + id;
+            }
+        }
+
+        function del(id, type) {
+        	if(!confirm("你确定要删除吗？")){
+        		return;
+        	}
+            var param="{"+"id:'"+id+"'}"
+            var url="";
+            if (type == 0) {
+                url+="http://192.168.0.170:15000/yc-crm/tab/delete/"+param;
+            }
+            if (type == 1) {
+                url+="http://192.168.0.170:15000/yc-crm/sub/delete/"+param;
+            }
+            if (type == 2) {
+                url+="http://192.168.0.170:15000/yc-crm/year/delete/"+param;
+            }
+            if (type == 3) {
+                url+="http://192.168.0.170:15000/yc-crm/item/from/delete/"+param;
+            }
+            $.ajax({
+                url:url,
+                type: "post",
+                dataType: "json",
+                success: function (msg) {
+                 alert("删除成功");
+                 window.location.href="item_element.html";
+                }
+            })
+        }
+    </script>
+</head>
+
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置>题库管理>标签编辑</h3>
+    </div>
+    <div class="panel-body">
+<div class="row">
+	<div class="col-xs-10 col-lg-offset-1">
+		<ul id="item_element" class="nav nav-tabs">
+		    <li class="active"><a href="#ie_tab" data-toggle="tab">标签</a></li>
+		    <li><a href="#ie_sub" data-toggle="tab">科目</a></li>
+		    <li><a href="#ie_year" data-toggle="tab">年份</a></li>
+		    <li><a href="#ie_from" data-toggle="tab">题目来源</a></li>
+		</ul>
+	</div>
+</div>
+<div id="tab-content" class="tab-content">
+    <div class="tab-pane fade in active" id="ie_tab">
+        <div class="panel-body">
+            <div class="row search_Div">
+                <div class="form-group col-xs-3 col-lg-offset-1">
+                    <label>名称：</label>
+                    <input type="text" id="tab_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>创建时间：</label>
+                    <input type="text" id="tab_time" class="datetime form-control">
+                </div>
+                <div class="form-group col-xs-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" onclick="search_tab()">查询</button>
+                    <button type="button" class="btn btn-default" onclick="create(0)">新建</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-lg-offset-1">
+                    <table id="tab_table">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="ie_sub">
+        <div class="panel-body">
+            <div class="row search_Div">
+                <div class="form-group col-xs-3 col-lg-offset-1">
+                    <label>名称：</label>
+                    <input type="text" id="sub_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>创建时间：</label>
+                    <input type="text" id="sub_time" class="datetime form-control">
+                </div>
+                <div class="form-group col-xs-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" onclick="search_sub()">查询</button>
+                    <button type="button" class="btn btn-default" onclick="create(1)">新建</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-lg-offset-1">
+                    <table id="sub_table">
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="ie_year">
+        <div class="panel-body">
+            <div class="row search_Div">
+                <div class="form-group col-xs-3 col-lg-offset-1">
+                    <label>名称：</label>
+                    <input type="text" id="year_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>创建时间：</label>
+                    <input type="text" id="year_time" class="datetime form-control">
+                </div>
+                <div class="form-group col-xs-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" onclick="search_year()">查询</button>
+                    <button type="button" class="btn btn-default" onclick="create(2)">新建</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-lg-offset-1">
+                    <table id="year_table">
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="ie_from">
+        <div class="panel-body">
+            <div class="row search_Div">
+                <div class="form-group col-xs-3 col-lg-offset-1">
+                    <label>名称：</label>
+                    <input type="text" id="from_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-3">
+                    <label>创建时间：</label>
+                    <input type="text" id="from_time" class="datetime form-control">
+                </div>
+                <div class="form-group col-xs-3" style="margin-top: 25px">
+                    <button type="button" class="btn btn-primary" onclick="search_from()">查询</button>
+                    <button type="button" class="btn btn-default" onclick="create(3)">新建</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-lg-offset-1">
+                    <table id="from_table">
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

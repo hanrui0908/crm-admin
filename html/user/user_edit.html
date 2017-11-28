@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学生用户编辑</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link href="../../css/bootstrap-theme.css" rel="stylesheet">
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../js/public.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <link  href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <style>
+        form .form-group{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">当前位置：题库管理>学生用户编辑</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row search_Div">
+            <form class="form-inline" id="form" enctype="multipart/form-data" method="post">
+                <div class="form-group col-xs-6">
+                    <label>用户姓名：</label>
+                    <input type="text" id="name" class="form-control">
+
+                    <label>真实姓名：</label>
+                    <input type="text" id="real_name" class="form-control">
+                </div>
+                <div class="form-group col-xs-6">
+                    <label>用户昵称：</label>
+                    <input id="nick_name" type="text" class="form-control" />
+                    <label>用户性别：</label>
+                <select id="gender" class="form-control">
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label>所在省份：</label>
+                    <input id="state" type="text" class="form-control" />
+                    <label>所在城市：</label>
+                    <input id="city" type="text" class="form-control" />
+                </div>
+                <div class="form-group col-xs-6">
+                    <label>所在院校：</label>
+                    <input id="at_college" type="text" class="form-control"></input>
+                    <label>所读专业：</label>
+                    <input id="at_major" type="text" class="form-control"></input>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label>目标院校：</label>
+                    <input id="target_college" type="text" class="form-control"></input>
+                    <label>目标专业：</label>
+                    <input id="target_major" type="text" class="form-control"></input>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label>联系方式：</label>
+                    <input id="tel" type="text" class="form-control"></input>
+                    <label>注册时间：</label>
+                    <p id="create_time" type="text" class="form-control"></p>
+                </div>
+                <div class="form-group col-xs-6" id="head" style="position: relative">
+                    <label>用户头像：</label>
+                    <img id="head_pic" width="200px" height="200px" onclick="changeImg()"></img>
+                    <input id="new_head_pic" type="file" class="form-control" style="position: absolute; left: 90px;top: 0; height: 200px;width: 200px; opacity: 0" name="new_head_pic"></input>
+                </div>
+                <div class="form-group col-xs-1 col-md-offset-1" style="padding: 10px 0;">
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="update_user()">更新</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+        <table class="table" id="table">
+        </table>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+   function  get_address(str){
+        if(str){
+            var address={};
+            if(str.indexOf("省")>0||str.indexOf("自治区")>0){
+                if(str.split("省").length>1){
+                    var state=str.split("省")[0];
+                    var city=str.split("省")[1].split("市")[0];
+                    address.state=state+"省";
+                    address.city=city+"市";
+                    return address;
+                }
+                if(str.split("自治区").length>1){
+                    var state=str.split("自治区")[0];
+                    var city=str.split("自治区")[1].split("市")[0];
+                    address.state=state+"自治区";
+                    address.city=city+"市";
+                    return address;
+                }
+
+            }else{
+                if(str.split("市").length>1){
+                    var state=str.split("市")[0];
+                    var city=str.split("市")[1].split("区")[0];
+                    address.state=state+"市";
+                    address.city=city+"区";
+                    return address;
+                }
+            }
+        }else{
+            var address={};
+            address.state="未知";
+            address.city="未知";
+            return address;
+        }
+   }
+   function update_user() {
+       var id = GetQueryString("id");
+       var param = {};
+       param.id=id;
+       var name = $("#name").val();
+       if (name) {
+           param.name = name;
+       }
+       var real_name = $("#real_name").val();
+       if (real_name) {
+           param.realname = real_name;
+       }
+       var nickname = $("#nick_name").val();
+       if (nickname){
+           param.nickname = nickname;
+       }
+       var gender = $("#gender").val();
+       if (gender) {
+           param.gender = gender;
+       }
+       var state = $("#state").val();
+       var city = $("#city").val();
+       if(state&&city){
+           param.address = state+city;
+       }
+       var collegefrom=$("#at_college").val();
+       if (collegefrom) {
+           param.collegefrom = collegefrom;
+       }
+       var major=$("#at_major").val();
+       if (major) {
+           param.major = major;
+       }
+       var collegetarget=$("#target_college").val();
+       if (collegetarget) {
+           param.collegetarget = collegetarget;
+       }
+       var majortarget = $("#target_major").val();
+       if (majortarget) {
+           param.majortarget = majortarget;
+       }
+       var tel=$("#tel").val();
+       if (tel) {
+           param.tel = tel;
+       }
+       param.creator = "system";
+       var from = new FormData(document.getElementById("form"));
+       from.append("param", JSON.stringify(param));
+       $.ajax({
+           url: 'http://192.168.0.170:15000/yc-crm/user/update',
+           type: 'post',
+           dataType: "json",
+           data: from,
+           contentType: false,
+           processData: false,
+           success: function (msg) {
+               alert("更新成功");
+           }, error: function (msg) {
+               alert("更新失败");
+           }
+       })
+    }
+
+    $(function(){
+
+        var dataInfo = function (id) {
+            $.ajax({
+                url: "http://192.168.0.170:15000/yc-crm/user/search",
+                type: "post",
+                cache: false,
+                dataType: "json",
+                data: {
+                    param: "{id:" + id + "}"
+                },
+                success: function (msg) {
+                    var data = msg.result.result[0];
+                    console.log(data.pic);
+                    var address=get_address(msg.result.result[0].address);
+                    $("#name").val(data.name);
+                    $("#real_name").val(data.realname);
+                    $("#nick_name").val(data.nickname);
+                    $("#gender").val(data.gender);
+                    $("#state").val(address.state);
+                    $("#city").val(address.city);
+                    $("#at_college").val(data.collegefrom);
+                    $("#at_major").val(data.major);
+                    $("#target_college").val(data.collegetarget);
+                    $("#target_major").val(data.majortarget);
+                    $("#tel").val(data.tel);
+                    $("#create_time").html(data.createtime);
+                    $("#head_pic").attr("src",data.pic);
+                }
+            });
+        }
+        var id = GetQueryString("id");
+        dataInfo(id);
+        $('.datetime').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            minView: "month", //选择日期后，不会再跳转去选择时分秒
+            autoclose:true //选择日期后自动关闭
+        });
+        $("#addItem").click(function(){
+            alert("保存按钮方法")
+        });
+    });
+</script>

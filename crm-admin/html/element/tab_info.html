@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>标签详情</title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+	</head>
+	<body>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">当前位置>题库元素>标签详情</h3>
+			</div>
+		  <div class="panel-body">
+		  	<div class="row">
+		  		<div class="col-xs-4 col-lg-offset-3">
+		  			<form class="form-horizontal item">
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">名称</label>
+					    <div class="col-xs-9">
+					    	<p class="form-control-static" id="tab_name"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">创建时间</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="tab_time"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">创建人</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="tab_creator"></p>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label class="col-xs-3 control-label" for="">备注</label>
+					    <div class="col-xs-9">
+							<p class="form-control-static" id="tab_note"></p>
+					     </div>
+					  </div>
+					  <div class="form-group">
+					    <div class="col-sm-offset-3 col-sm-9">
+					      <button type="button" class="btn btn-default" id="revert">返回</button>
+					    </div>
+					  </div>
+					</form>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	var dataInfo = function(id){
+        $.ajax({
+            url: "http://192.168.0.137:8080/yc-crm/tab/search",
+            type: "post",
+            cache: false,
+            dataType: "json",
+            data: {
+                param: "{id:'"+id+"'}"
+            },
+            success: function (msg) {
+                if (msg.status == 0) {
+                    $("#tab_name").html(msg.result.result[0].name);
+                    $("#tab_time").html(msg.result.result[0].create_time);
+                    $("#tab_creator").html(msg.result.result[0].creater);
+                    $("#tab_note").html(msg.result.result[0].note);
+                }
+            }
+        });
+    }
+	$(function(){
+		var id = GetQueryString("id");
+		dataInfo(id);
+		$("#revert").click(function(){
+            window.location.href="item_element.html";
+        });
+	});
+</script>

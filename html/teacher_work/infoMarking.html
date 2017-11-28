@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>批复</title>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+		<link href="../../css/bootstrap-theme.css" rel="stylesheet">
+		<link href="../../bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="../../bootstraptable/bootstrap-table.css">
+		<!--<link rel="stylesheet" type="text/css" href="../../css/style.css">-->
+		<script src="../../js/jquery.js"></script>
+		<script src="../../js/public.js"></script>
+		<script src="../../js/bootstrap.js"></script>
+		<script src="../../bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ></script>
+		<script src="../../bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script src="../../bootstraptable/bootstrap-table.js"></script>
+    	<script src="../../bootstraptable/bootstrap-table-zh-CN.js"></script>
+    	
+	    <style>
+	    	#form_0,#form_1,#form_2{
+	    		display: none;
+	    	}
+	    </style>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">当前位置>模拟考试管理>阅卷管理>批复</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="row search_Div">
+		  		<form class="form-inline">
+				  <div class="form-group col-xs-3">
+				    <label>用户姓名：</label>
+				    <div class="form-control-static">
+				    	
+				    </div>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>科目：</label>
+				    <div class="form-control-static">
+				    	xx
+				    </div>
+				  </div>
+				  <div class="form-group col-xs-3">
+				    <label>考试名称：</label>
+				    <div class="form-control-static">
+				    	name
+				    </div>
+				  </div>
+				  
+				  <div class="form-group col-xs-3">
+				    <label>考试日期：</label>
+				    <div class="form-control-static">
+				    	日期
+				    </div>
+				  </div>
+				  <div class="form-group col-xs-3">
+					<label>考试时间：</label>
+					<div class="form-control-static">
+						时间
+					</div>
+				  </div>
+				  
+				</form>
+		  	</div>
+		    <div class="row">
+		    	<div class="col-xs-8 col-md-offset-2">
+		    		
+		    		<form id="form_0">
+		    		  <p class="bg-primary" style="padding: 10px;">英语作文</p>
+					  <div class="form-group">
+					    <label for="">题干</label>
+					    <div class="form-control-static content">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">用户的答案</label>
+					    <div class="form-control-static answer_info">
+					    	
+					    </div>
+					  </div>
+					  
+					</form>
+					
+		    		<form id="form_1">
+		    		  <p class="bg-primary" style="padding: 10px;">数学解答题</p>
+					  <div class="form-group">
+					    <label for="">题干</label>
+					    <div class="form-control-static content">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">用户的答案</label>
+					    <div class="form-control-static answer_info">
+					    	
+					    </div>
+					  </div>
+					  
+					  
+					</form>
+					
+		    		<form id="form_2" style="display: ;">
+		    		  <p class="bg-primary" style="padding: 10px;">政治材料题</p>
+					  <div class="form-group">
+					    <label for="">题干</label>
+					    <div class="form-control-static content">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">问题</label>
+					    <div class="form-control-static questions">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">答案</label>
+					    <div class="form-control-static answers">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">用户的答案</label>
+					    <div class="form-control-static useranswer_info">
+					    	
+					    </div>
+					  </div>
+					</form>
+					<form>
+					  <div class="form-group">
+					    <label for="">批复区域</label>
+					    <div class="form-control-static reply_info">
+					    	
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="">分数</label>
+					    <div class="form-control-static answer_info">
+					    	
+					    </div>
+					  </div>
+					  
+					  <button type="button" class="btn btn-default" onclick="location='list.html'">返回</button>
+					  
+					</form>
+					
+		    	</div>
+		    </div>
+		  </div>
+		</div>
+	</body>
+</html>
+<script>
+	var getInfo = function(userId,subjectId){
+		//获得考试信息
+//		$.ajax({
+//			type: "get",
+//			url: "",
+//			cache:false,
+//			data:{
+//				offset:0,
+//				limit:5,
+//				param:JSON.stringify({id:id})
+//			},
+//			dataType: "json",
+//			success: function(msg){
+//				
+//			}
+//		});
+
+		//获取题目信息
+		$.ajax({
+			type: "get",
+			url: "http://192.168.0.170:15000/yc-crm/item/search",
+			cache:false,
+			data:{
+				offset:0,
+				limit:5,
+				param:JSON.stringify({id:subjectId})
+			},
+			dataType: "json",
+			success: function(msg){
+				var subjectInfo = msg.result.result[0];
+				console.log(subjectInfo)
+				if(subjectInfo.item_type == 11||subjectInfo.item_type == 12){//英语作文#form_0 77
+					$("#form_0").show();
+					var this_form = $("#form_0");
+					this_form.find(".content").html(decodeURIComponent(subjectInfo.content));//题干
+				}else if(subjectInfo.item_type ==3){//数学解答#form_1
+					$("#form_1").show();
+					var this_form = $("#form_1");
+					this_form.find(".content").html(decodeURIComponent(subjectInfo.content));//题干
+				}else if(subjectInfo.item_type == 5){//政治材料#form_2 66
+					$("#form_2").show();
+					var this_form = $("#form_2");
+					this_form.find(".content").html(decodeURIComponent(subjectInfo.content));//题干
+					var questionArr = decodeURIComponent(subjectInfo.questions).split(',');//问题
+					var questHtml = "";
+					for (item in questionArr) {
+						questHtml += "<div>"+(parseInt(item)+1)+"."+questionArr[item]+"</div>";
+					}
+					this_form.find(".questions").html(questHtml);
+					
+					var answersArr = decodeURIComponent(subjectInfo.correct_answers).split(',');//答案
+					var answerHtml= "";
+					for(item in answersArr){
+						answerHtml += "<div>"+(parseInt(item)+1)+"."+answersArr[item]+"</div>";
+					}
+					this_form.find(".answers").html(answerHtml);
+					
+				}
+			}
+		});
+	}
+	$(function(){
+		//得到题目id和用户id
+		var userId = GetQueryString("userid");//用户id
+		var subjectId = GetQueryString("subjectid");//习题id
+		//试题id
+		console.log(userId+'==='+subjectId);
+		getInfo(userId,subjectId)
+		
+		
+    })
+</script>
