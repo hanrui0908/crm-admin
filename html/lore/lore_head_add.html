@@ -92,9 +92,9 @@
 <script>
 	$(function(){
 		//科目
-		$("#lore_sub_index").html("<option value=''>请选择</option>"+get_sub_lore_index());
+		$("#lore_sub_index").html("<option value=''>请选择</option>"+get_sub());
 		//年份
-		$("#lore_year_index").html("<option value=''>请选择</option>"+get_year_lore_index());
+		$("#lore_year_index").html("<option value=''>请选择</option>"+get_year());
 		
 		$("#addItem").click(function(){//添加知识点按钮
 			var lore_name = $("#lore_name").val();//名称
@@ -147,7 +147,7 @@
 			obj.id = '-1';
 			var param = JSON.stringify(obj);
             param= encodeURIComponent(param);
-			var url="http://192.168.0.170:15000/yc-crm/lore/head/add?param='"+param+"'";
+			var url="http://192.168.0.137:8080/yc-crm/lore/head/add?param='"+param+"'";
 			var msg = dataM(url);
 			if(msg.status == "0"){
 				alert("添加知识点成功");

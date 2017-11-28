@@ -153,7 +153,7 @@
         var id = GetQueryString("id");
         dataInfo(id);
         $.ajax({
-            url: "http://192.168.0.170:15000/yc-crm/lore/head/search",
+            url: "http://192.168.0.137:8080/yc-crm/lore/head/search",
             type: "post",
             cache: false,
             dataType: "json",
@@ -176,7 +176,7 @@
 
 
         $.ajax({
-            url: "http://192.168.0.170:15000/yc-crm/lore/tree/json/{headid:" + id + "}",
+            url: "http://192.168.0.137:8080/yc-crm/lore/tree/json/{headid:" + id + "}",
             type: "post",
             dataType: "json",
             success: function (msg) {
@@ -243,7 +243,7 @@
                 json: JSON.stringify(tree)
             }
            $.ajax({
-                url: "http://192.168.0.170:15000/yc-crm/lore/tree/add?param='" + encodeURIComponent(JSON.stringify(obj)) + "'",
+                url: "http://192.168.0.137:8080/yc-crm/lore/tree/add?param='" + encodeURIComponent(JSON.stringify(obj)) + "'",
                 type: "post",
                 dataType: "json",
                 success: function (msg) {

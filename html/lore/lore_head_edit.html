@@ -18,7 +18,7 @@
 <body>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">当前位置：题库管理>知识点列表>添加知识点</h3>
+        <h3 class="panel-title">当前位置：题库管理>知识点列表>编辑知识点</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -92,12 +92,12 @@
 <script>
     $(function () {
         //科目
-        $("#lore_sub_index").html("<option value=''>请选择</option>" + get_sub_lore_index());
+        $("#lore_sub_index").html("<option value=''>请选择</option>" + get_sub());
         //年份
-        $("#lore_year_index").html("<option value=''>请选择</option>" + get_year_lore_index());
+        $("#lore_year_index").html("<option value=''>请选择</option>" + get_year());
         var id = GetQueryString("id")
         $.ajax({
-            url: "http://192.168.0.170:15000/yc-crm/lore/head/search",
+            url: public_url+"/yc-crm/lore/head/search",
             type: "post",
             cache: false,
             dataType: "json",
@@ -166,7 +166,7 @@
                         obj.id = '-1';
                         var param = JSON.stringify(obj);
                         param= encodeURIComponent(param);
-                        var url="http://192.168.0.170:15000/yc-crm/lore/head/add?param='"+param+"'";
+                        var url="http://192.168.0.137:8080/yc-crm/lore/head/add?param='"+param+"'";
                         var msg = dataM(url);
                         if(msg.status == "0"){
                             alert("添加知识点成功");

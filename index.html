@@ -77,9 +77,9 @@
 				<ul>
 					<li><a data-href="html/element/item_element.html" data-title="题库元素" href="javascript:void(0)">题库元素</a></li>
 					<li><a data-href="html/lore/lore.html" data-title="知识点" href="javascript:void(0)">知识点</a></li>
-					<li><a data-href="html/item/item.html" data-title="基础题库" href="javascript:void(0)">基础题库</a></li>
+					<li><a data-href="html/question/item.html" data-title="基础题库" href="javascript:void(0)">基础题库</a></li>
 					<li><a data-href="html/material/list.html" data-title="复习教材管理" href="javascript:void(0)">复习教材管理</a></li>
-					<li><a data-href="html/word/word.html" data-title="单词库" href="javascript:void(0)">单词库</a></li>
+					<li><a data-href="x.html" data-title="单词库" href="javascript:void(0)">单词库</a></li>
 					<li><a data-href="html/assembly/list.html" data-title="考题组卷管理" href="javascript:void(0)">考题组卷管理</a></li>
 				</ul>
 			</dd>
@@ -88,13 +88,13 @@
 			<dt><i class="Hui-iconfont">&#xe616;</i> 模拟考试管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a data-href="html/imitate_template/list.html" data-title="模拟考试模板" href="javascript:void(0)">模拟考试模板</a></li>
-					<li><a data-href="html/imitate_paper/list.html" data-title="模拟考试试卷" href="javascript:void(0)">模拟考试试卷</a></li>
-					<li><a data-href="html/imitate_manger/list.html" data-title="考试发布管理" href="javascript:void(0)">考试发布管理</a></li>
+					<li><a data-href="html/template/list.html" data-title="模拟考试模板" href="javascript:void(0)">模拟考试模板</a></li>
+					<li><a data-href="html/paper/list.html" data-title="模拟考试试卷" href="javascript:void(0)">模拟考试试卷</a></li>
+					<li><a data-href="html/release/list.html" data-title="考试发布管理" href="javascript:void(0)">考试发布管理</a></li>
 					<li><a data-href="html/authorization/list.html" data-title="考试授权" href="javascript:void(0)">考试授权</a></li>
-					<li><a data-href="html/teacher_work/list.html" data-title="阅卷管理" href="javascript:void(0)">阅卷管理</a></li>
-					<li><a data-href="html/x/list.html" data-title="考试结果管理" href="javascript:void(0)">考试结果管理</a></li>
-					<li><a data-href="html/x/list.html" data-title="考试结果发布管理" href="javascript:void(0)">考试结果发布管理</a></li>
+					<li><a data-href="html/marking/list.html" data-title="阅卷管理" href="javascript:void(0)">阅卷管理</a></li>
+					<li><a data-href="html/result/list.html" data-title="考试结果管理" href="javascript:void(0)">考试结果管理</a></li>
+					<li><a data-href="html/resultrelease/list.html" data-title="考试结果发布管理" href="javascript:void(0)">考试结果发布管理</a></li>
 					
 					
 				</ul>
@@ -110,32 +110,6 @@
 					<li><a data-href="html/模板/infoItem.html" data-title="查看" href="javascript:void(0)">查看</a></li>
 					
 					
-				</ul>
-			</dd>
-		</dl>
-		
-		
-		<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe616;</i>用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-                    <li><a data-href="html/user/user.html" data-title=" 用户信息" href="javascript:void(0)">用户信息</a></li>
-					<li><a data-href="html/user/user_plan_list.html" data-title=" 用户计划" href="javascript:void(0)">用户计划</a></li>
-					<li><a data-href="html/user/user_order.html" data-title="消费订单" href="javascript:void(0)">消费订单</a></li>
-					<li><a data-href="html/user/user_draw.html" data-title="用户提现" href="javascript:void(0)">用户提现</a></li>
-					<li><a data-href="html/user/user_imitate.html" data-title="用户模考" href="javascript:void(0)">用户模考</a></li>
-				</ul>
-			</dd>
-		</dl>
-		
-        <dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe616;</i>老师管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-                    <li><a data-href="html/teacher/teacher.html" data-title=" 老师信息" href="javascript:void(0)">老师信息</a></li>
-					<li><a data-href="html/teacher/teacher_draw.html" data-title="老师提现" href="javascript:void(0)">老师提现</a></li>
-					<li><a data-href="html/teacher_work/list.html" data-title="老师阅卷" href="javascript:void(0)">老师阅卷</a></li>
-
 				</ul>
 			</dd>
 		</dl>
@@ -277,6 +251,11 @@ $(function(){
 		$(".Hui-aside").find("li").removeClass("li_act")
 		$(this).addClass("li_act")
 	});
+	//判断sessionStorage登录信息
+//	console.log(sessionStorage.getItem("op") != null)
+	if(sessionStorage.getItem("op") == null){
+		location = 'login.html';
+	}
 });
 /*个人信息*/
 function myselfinfo(){
